@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tarea JS Santex</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    
+    <header>
+        <h1>Tarea Santex Javascript</h1>
+        <p>Para revisar la solucion abra la consola de JavaScript</p>
+    </header>
+
+    <main class="main">
+    <p class="ejercicio"> 1 - Realizar una funcion que reciba un numero y escriba una piramide desde 1 hasta ese numero de la siguiente forma: 
+        <br> 
+        <br>
+        para valor 6 
+        <br>1
+        <br>12
+        <br>123
+        <br>1234 
+        <br>12356
+        <br> 
+        <br>para valor 3 
+        <br>1 
+        <br>12
+        <br>123
+
+        <p class="respuesta">     
+            -- Respuesta --
+            <br>
+            <br>  
+                 Esta funcion toma el numero ingresado por el usuario como parametro.
+           <br>  Con ese numero se ejecuta un ciclo for donde imprime el numero.
+           <br>  Dentro del ciclo for hay otro ciclo for (for anidados) que genera un espacio en blanco,
+           <br>  esto genera un espaciado y evita que esten todos los valores juntos.
+           <br>  El \n genera una nueva linea de codigo.
+            <br>
+               <br> function dibujarPiramide(num) {
+               <br> let espacio = "";
+                  <br>  for (let i = 1; i <= num; i++) {
+                   <br>  for (let j = 1; j <= i; j++) {
+                    <br> espacio +=    espacio += j;
+                   <br> }
+                <br> espacio += "\n";
+               <br> }
+           <br> console.log(espacio);
+            }    
+        </p>
+
+    </p>
+
+    <p class="ejercicio"> 2 - Escribir una funcion que reciba 2 array y devuelva un array con todos los elementos que coinciden entre ellos
+        <br>
+        <br>
+            Ejemplo:
+        <br>
+            Array1: ['rojo', 'azul', 'amarillo']
+        <br>
+            Array2: ['blanco', 'negro', 'rojo']
+        <br>
+            Resultado: ['rojo']
+        <br>
+        <br>
+            Ejemplo 2:
+        <br>
+            Array1: [4, 3, true, 'manzana']
+        <br>
+            Array2: ['pera', 3, f alse, true, 3, true]
+        <br>
+            Resultado: [3, true]
+
+        <p class="respuesta">     
+            -- Respuesta --
+        <br>
+        <br>
+        Ejer 2:
+        <br>
+        Esta funcion recibe 2 arreglos y luego compara cada valor con el otro arreglo.
+        <br>
+        Si el valor coincide se agrega a un nuevo arreglo y se lo imprime al usuario.
+        <br>
+        <br> function coinciden(firstArray, secondArray) {
+            <br>
+            const concidencia = [];
+            <br>
+            for (let i = 0; i < firstArray.length; i++) {
+            <br>    
+                for (let j = 0; j < secondArray.length; j++) {
+                <br>
+                    if (firstArray[i] === secondArray[j]) {
+                <br>
+                        concidencia.push(firstArray[i]);
+                
+                <br>        break;
+                }
+            }
+        }
+             return concidencia;
+    }   
+        </p>        
+    </p> 
+
+<p class="ejercicio"> 
+3 - Dado el siguiente objeto
+<br>
+    <br>
+    let carrito = {
+        <br>
+        montoTotal: 10,
+        <br>
+        productos: ["Leche"]
+        <br>
+    }
+    <br>
+    <br>
+Crear las clases necesarias para generar carritos respetando la estructura del objeto dado.
+<br>
+<br>
+ 3.1 - Agregar un metodo a la clase que agregue un producto al carrito y actualice el montoTotal
+ <br>
+ <br>
+agregarProducto(nombre, precio, unidades) {
+    <br>
+    // Completar aca...
+    <br>
+}
+<br>
+<br>
+Ej:
+agregarProducto("Azucar", 5, 2);
+<br>
+<br>
+//Resultado esperado
+<br>
+<br>
+carrito = {
+    <br>
+    montoTotal: 20,
+    <br>
+    productos: ["Leche", "Azucar"]
+    <br>
+}
+<br>
+<br>
+
+3.2 - Agregar al ejercicio anterior una validación para no permitir duplicados e imprimir un mensaje si el item ya existe “ya existe xxx con yyy unidades”
+
+        <p class="respuesta">     
+            -- Respuesta --
+        <br>
+<br> Ejer 3:
+<br> Con la clase ya definida lo que hice fue crear una variable montoTotal inicializada en 0
+<br> En el metododo agregarProducto, si su nombre es igual a un producto ya definido en el array productos
+<br> Va a lanzar un mensaje de error, y si su nombre no coincide va a crear y agregarlo al array productos
+<br> Tambien va a actualizar el precio multiplicando su valor por las unidades del producto definido
+<br> 
+<br> Para crear nuevos productos hay que ejecutar miInventario.agregarProducto("nombre", precioINT, unidadesINT)
+<br> Si abren la consola ya hay un ejemplo de la resolucion.
+<br>
+<br> class Inventario {
+<br> constructor() {
+<br>   this.productos = [];
+<br>    this.montoTotal = 0;
+<br>  }
+<br>
+<br>  agregarProducto(nombre, precio, unidades) {
+ <br>   let productoExistente = this.productos.find(
+  <br>    (producto) => producto.nombre === nombre
+  <br>  );
+  <br>
+  <br>  if (productoExistente) {
+   <br>   // Si existe, lanza un console.log() con el mensaje de error.
+    <br>  console.log(
+     <br>   `El producto "${nombre}" ya existe con ${productoExistente.unidades} unidades`
+    <br>  );
+   <br> } else {
+    <br>  // Si no existe, crea un nuevo producto y lo agrega al array de productos
+     <br> let nuevoProducto = { nombre, precio, unidades };
+     <br> this.productos.push(nuevoProducto);
+<br>
+   <br>   // Actualiza el monto total
+     <br> this.montoTotal += precio * unidades;
+<br>
+   <br>   console.log(
+      <br>  `Se ha agregado el producto "${nombre}" con un precio de $${precio} y ${unidades} unidades El Monto total es de ${this.montoTotal}`
+     <br> );
+  <br>  }
+ <br> }
+<br> }
+
+<br> let miInventario = new Inventario();
+<br>
+<br> miInventario.agregarProducto("Leche", 10, 2);
+<br> miInventario.agregarProducto("Ketchup", 5, 2);
+<br> miInventario.agregarProducto("Leche", 25, 2);
+        </p>  
+
+</p>
+
+    </main>
+
+    <script src="main.js"></script>
+    
+</body>
+</html>
