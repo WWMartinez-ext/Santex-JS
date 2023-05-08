@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>JavaScript Integrador</title>
+    <link rel="icon" type="image/x-icon" href="/IMG/favicon-16x16.png">
+</head>
+<body>
+    
+    <h1>Ejercicio Integrador Javascript</h1>
+
+    <div class="codeheader" id="codeheader_js">{{ Lautaro Martinez }}</div>
+    <div id="codebox">
+    /*
+    En el archivo tarea2.js podemos encontrar un código de un supermercado que vende productos.
+    <br>
+    El código contiene 
+    <br>
+    - una clase Producto que representa un producto que vende el super
+    <br>
+    - una clase Carrito que representa el carrito de compras de un cliente
+    <br>
+    - una clase ProductoEnCarrito que representa un producto que se agrego al carrito
+    <br>
+    - una función findProductBySku que simula una base de datos y busca un producto por su sku
+    <br>
+    El código tiene errores y varias cosas para mejorar / agregar
+    <br>
+    <br>
+
+    Ejercicios
+    <br>
+    1- Arreglar errores existentes en el código
+    <br>
+        a- Al ejecutar agregarProducto 2 veces con los mismos valores debería agregar 1 solo producto con la suma de las cantidades. 
+        <br>   
+        b- Al ejecutar agregarProducto debería actualizar la lista de categorías solamente si la categoría no estaba en la lista.
+        <br>
+        c- Si intento agregar un producto que no existe debería mostrar un mensaje de error.
+        <br>
+    <br>
+2- Agregar la función eliminarProducto a la clase Carrito
+<br>
+    a- La función eliminarProducto recibe un sku y una cantidad (debe devolver una promesa)
+    <br>
+    b- Si la cantidad es menor a la cantidad de ese producto en el carrito, se debe restar esa cantidad al producto
+    <br>
+    c- Si la cantidad es mayor o igual a la cantidad de ese producto en el carrito, se debe eliminar el producto del carrito
+    <br>
+    d- Si el producto no existe en el carrito, se debe mostrar un mensaje de error
+    <br>
+    e- La función debe retornar una promesa
+<br>
+3- Utilizar la función eliminarProducto utilizando .then() y .catch()
+<br>
+*/
+<br>
+<br>
+// Cada producto que vende el super es creado con esta clase
+<br>
+class Producto {
+    <br>
+  constructor(sku, nombre, precio, categoria, stock) {
+    <br>
+    this.sku = sku;
+    <br>
+    this.nombre = nombre;
+    <br>
+    this.categoria = categoria;
+    <br>
+    this.precio = precio;
+    <br>
+    this.stock = stock ?? 10; // establece un valor predeterminado de 10 para stock si stock es nulo
+    <br>
+  }
+  <br>
+}
+<br>
+<br>
+
+// Creo todos los productos que vende mi super
+<br>
+const queso = new Producto("KS944RUR", "Queso", 10, "lacteos", 4);
+<br>
+const gaseosa = new Producto("FN312PPE", "Gaseosa", 5, "bebidas");
+<br>
+const cerveza = new Producto("PV332MJ", "Cerveza", 20, "bebidas");
+<br>
+const arroz = new Producto("XX92LKI", "Arroz", 7, "alimentos", 20);
+<br>
+const fideos = new Producto("UI999TY", "Fideos", 5, "alimentos");
+<br>
+const lavandina = new Producto("RT324GD", "Lavandina", 9, "limpieza");
+<br>
+const shampoo = new Producto("OL883YE", "Shampoo", 3, "higiene", 50);
+<br>
+const jabon = new Producto("WE328NJ", "Jabon", 4, "higiene", 3);
+<br>
+<br>
+
+// Genero un listado de productos. Simulando base de datos
+<br>
+const productosDelSuper = [
+<br>
+  queso,
+  <br>
+  gaseosa,
+  <br>
+  cerveza,
+  <br>
+  arroz,
+  <br>
+  fideos,
+  <br>
+  lavandina,
+  <br>
+  shampoo,
+  <br>
+  jabon,
+  <br>
+];
+<br>
+<br>
+
+// Cada cliente que venga a mi super va a crear un carrito
+<br>
+class Carrito {
+    <br>
+  productos; // Lista de productos agregados
+  <br>
+  categorias; // Lista de las diferentes categorías de los productos en el carrito
+  <br>
+  precioTotal; // Lo que voy a pagar al finalizar mi compra
+  <br>
+
+  // Al crear un carrito, empieza vació
+  <br>
+  constructor() {
+    <br>
+    this.precioTotal = 0;
+    <br>
+    this.productos = [];
+    <br>
+    this.categorias = [];
+    <br>
+  }
+  <br>
+  <br>
+
+  /**
+  <br>
+   * función que agrega @{cantidad} de productos con @{sku} al carrito
+   <br>
+   */
+   <br>
+   <br>
+  async agregarProducto(sku, cantidad) {
+    <br>
+    console.log(`Agregando ${cantidad} ${sku}`);
+    <br>
+    <br>
+    // Busco el producto en la "base de datos"
+    <br>
+    const producto = await findProductBySku(sku);
+    <br>
+    console.log("Producto encontrado", producto);
+    <br>
+
+    // Busco si el producto ya existe en el carrito con find()
+    <br>
+    const productoExistenteIndex = this.productos.findIndex((p) => p.sku === sku);
+    <br>
+    if (productoExistenteIndex !== -1) {
+        <br>
+      // Si el producto ya existe en el carrito, actualizo la cantidad
+      <br>
+      this.productos[productoExistenteIndex].cantidad += cantidad;
+      <br>
+    } else {
+        <br>
+      // Si no existe, creo un nuevo producto en el carrito
+      <br>
+      const nuevoProducto = new ProductoEnCarrito(
+        <br>
+        sku,
+        <br>
+        producto.nombre,
+        <br>
+        cantidad
+        <br>
+      );
+      <br>
+      this.productos.push(nuevoProducto);
+      <br>
+    }
+    <br>
+    <br>
+
+    // Verifico si la categoría ya existe en la lista de categorías
+    <br>
+    if (!this.categorias.includes(producto.categoria)) {
+        <br>
+      this.categorias.push(producto.categoria);
+      <br>
+    }
+    <br>
+    <br>
+
+    // Actualizo el precio total
+    <br>
+    this.precioTotal += producto.precio * cantidad;
+    <br>
+    console.log("Precio total: " + this.precioTotal);
+    <br>
+  }
+  <br>
+
+  /**
+  <br>
+   * Función que elimina @{cantidad} de productos con @{sku} del carrito
+   <br>
+   */
+   <br>
+   <br>
+
+  async eliminarProducto(sku, cantidad) {
+    <br>
+    try {
+        <br>
+      // Busco si el producto ya existe en el carrito con findIndex()
+      <br>
+      const productoExistenteIndex = this.productos.findIndex((p) => p.sku === sku);
+      <br>
+      <br>
+
+      // Si el producto no existe en el carrito, muestro un mensaje de error y rechazo la promesa
+      <br>
+      if (productoExistenteIndex === -1) {
+        <br>
+        throw new Error(`El producto con SKU ${sku} no existe en el carrito`);
+        <br>
+      }
+      <br>
+      <br>
+
+      // Si el producto existe en el carrito, actualizo la cantidad o lo elimino según corresponda
+      <br>
+      console.log("");
+      <br>
+      console.log(`Eliminando el producto SKU ${sku} cantidad: ${cantidad}`);
+      <br>
+      const productoExistente = this.productos[productoExistenteIndex];
+      <br>
+      if (cantidad < productoExistente.cantidad) {
+        <br>
+        productoExistente.cantidad -= cantidad;
+        <br>
+        console.log("Producto eliminado correctamente");
+        <br>
+      } else {
+        <br>
+        this.productos.splice(productoExistenteIndex, 1);
+        <br>
+      }
+      <br>
+      <br>
+
+      // Actualizo el precio total
+      <br>
+      const producto = await findProductBySku(sku);
+      <br>
+      this.precioTotal -= producto.precio * cantidad;
+      <br>
+      console.log("Precio total: " + this.precioTotal);
+      <br>
+        <br>
+
+      // Resuelvo la promesa
+      <br>
+      return Promise.resolve();
+      <br>
+    } catch (error) {
+        <br>
+      // Rechazo la promesa si hay un error
+      <br>
+      return Promise.reject(error);
+      <br>
+    }
+    <br>
+  }
+  <br>
+}
+<br>
+<br>
+
+// Cada producto que se agrega al carrito es creado con esta clase
+<br>
+class ProductoEnCarrito {
+    <br>
+  sku; // Identificador único del producto
+  <br>
+  nombre; // Su nombre
+  <br>
+  cantidad; // Cantidad de este producto en el carrito
+  <br>
+<br>
+
+  constructor(sku, nombre, cantidad) {
+    <br>
+    this.sku = sku;
+    <br>
+    this.nombre = nombre;
+    <br>
+    this.cantidad = cantidad;
+    <br>
+  }
+  <br>
+}
+<br>
+<br>
+
+// Función que busca un producto por su sku en "la base de datos"
+<br>
+function findProductBySku(sku) {
+    <br>
+  return new Promise((resolve, reject) => {
+    <br>
+    setTimeout(() => {
+        <br>
+      const foundProduct = productosDelSuper.find(
+        <br>
+        (product) => product.sku === sku
+        <br>
+      );
+      <br>
+      if (foundProduct) {
+        <br>
+        resolve(foundProduct);
+        <br>
+        console.log("");
+        <br>
+      } else {
+        <br>
+        reject(`ERROR: Producto sku: ${sku} no encontrado en la base de datos`);
+        <br>
+      }
+      <br>
+    }, 1500);
+    <br>
+  });
+  <br>
+}
+<br>
+
+const carrito = new Carrito();
+<br>
+carrito.agregarProducto("KS944RUR", 3);
+<br>
+carrito.agregarProducto("FN312PPE", 2);
+<br>
+carrito.agregarProducto("PV332MJ", 5);
+<br>
+carrito.agregarProducto("XX92LKI", 2).then(() => {
+    <br>
+  return carrito.eliminarProducto("XX92LKI", 1);
+  <br>
+});
+<br>
+carrito.agregarProducto("RT324GD", 4);
+<br>
+carrito.agregarProducto("asdafsddsf", 2);
+<br>
+
+</div>
+
+    <script src="./main.js"></script>
+</body>
+</html>
